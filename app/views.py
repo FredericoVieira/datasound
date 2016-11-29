@@ -34,8 +34,8 @@ def login():
 
 @app.route('/login/authorized')
 def spotify_authorized():
-    resp = spotify.authorized_response();
-
+    # import pdb; pdb.set_trace();
+    resp = spotify.authorized_response()
     if resp is None:
         return 'Access denied: reason={0} error={1}'.format(
             request.args['error_reason'],
@@ -44,17 +44,21 @@ def spotify_authorized():
     if isinstance(resp, OAuthException):
         return 'Access denied: {0}'.format(resp.message)
 
-    if session.has_key('oauth_tokens'):
-        del session['oauth_tokens']
-
     session['oauth_token'] = (resp['access_token'], '')
+    me = spotify.get('https://api.spotify.com/v1/me')
 
-    return redirect (url_for('index'))
+    return 'Logged in as id={0}'.format(
+        me.data['id']
+    )
+
+
+@spotify.tokengetter
+def get_spotify_oauth_token():
+    return session.get('oauth_token')
 
 @app.route('/logout')
 def logout():
     session.pop('oauth_token', None)
-    logout_user()
     return redirect(url_for('index'))
 
 @spotify.tokengetter
