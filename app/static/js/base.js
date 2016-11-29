@@ -1,10 +1,10 @@
 var artists_popularity = {};
 
-var getUserPlaylist = function (user_id) {
+var getUserPlaylist = function (user_id, oauth_token) {
     $.ajax({
         url: 'https://api.spotify.com/v1/users/'+user_id+'/playlists',
         beforeSend: function (xhr) {
-            xhr.setRequestHeader ("Authorization", "Bearer " + "BQCiM0XvmMdzemrc7B1pKU17rQUri0yIDIPd4-Y7bEcErezbgnGNVrX9AJZwPYdWs7OmCB0oaOor037UsNquXMh8lVzMSkZr_g3y7aUgcGq43rHG8dO3d5cft1ODupOZ-xhy9eCfwB6wfXIIs3jeEn_tjzNMRja0PC_4");
+            xhr.setRequestHeader ("Authorization", "Bearer " + oauth_token);
         },
         success: function (response) {
 
@@ -17,7 +17,7 @@ var getUserPlaylist = function (user_id) {
                 $.ajax({
                     url: 'https://api.spotify.com/v1/users/'+playlists[i].owner_id+'/playlists/'+playlists[i].playlist_id+'/tracks?fields=items(track(album(artists)))',
                     beforeSend: function (xhr) {
-                        xhr.setRequestHeader ("Authorization", "Bearer " + "BQCiM0XvmMdzemrc7B1pKU17rQUri0yIDIPd4-Y7bEcErezbgnGNVrX9AJZwPYdWs7OmCB0oaOor037UsNquXMh8lVzMSkZr_g3y7aUgcGq43rHG8dO3d5cft1ODupOZ-xhy9eCfwB6wfXIIs3jeEn_tjzNMRja0PC_4");
+                        xhr.setRequestHeader ("Authorization", "Bearer " + oauth_token);
                     },
                     success: function (response) {
                         var artists_ids = [];
@@ -40,10 +40,16 @@ var getUserPlaylist = function (user_id) {
     });
 };
 
-getUserPlaylist('freddvieira');
+$(document).ready(function() {
+    var args = window.location.href.split("?")[1];
+    var user_id = args.split("&")[0].split('=')[1];
+    var oauth_token = args.split("&")[1].split('=')[1];
 
-$(document).ajaxStop(function () {
-    Object.keys(artists_popularity).forEach(function (key){
-        $('.controls').append(artists_popularity[key].name + ": " + artists_popularity[key].popularity + "<br><br>" );
+    getUserPlaylist(user_id, oauth_token);
+
+    $(document).ajaxStop(function () {
+        Object.keys(artists_popularity).forEach(function (key){
+            $('#teste').append(artists_popularity[key].name + ": " + artists_popularity[key].popularity + "<br><br>" );
+        });
     });
 });
