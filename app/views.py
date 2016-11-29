@@ -19,6 +19,11 @@ def score():
     return render_template('score.html', user_id=request.args['user_id'], oauth_token=request.args['oauth_token'])
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
 spotify = oauth.remote_app('spotify',
                            consumer_key=SPOTIFY_APP_ID,
                            consumer_secret=SPOTIFY_APP_SECRET,

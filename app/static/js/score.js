@@ -73,14 +73,16 @@ $(document).ready(function() {
         getUserScore(score);
 
         var classification;
-        if (score <= 25) {
+        if (score <= 20) {
+            classification = "Antiquado!";
+        } else if (score > 20 && score <= 35 ) {
             classification = "Alternativo!";
-        } else if (score > 25 && score < 50 ) {
+        } else if (score > 35 && score <=50 ) {
             classification = "Descolado!";
-        } else if (score > 50 && score < 75 ) {
+        } else if (score > 50 && score <= 75 ) {
             classification = "Mais um no meio do multidão!";
         } else {
-            classification = "Modinha!"
+            classification = "Modinha Mainstream!"
         }
         $('.classification').text(classification);
     });
