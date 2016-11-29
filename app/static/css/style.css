@@ -122,6 +122,7 @@ img { max-width: 100%; }
 	padding-top: 25px;
 }
 
+
 .form-top-left h3 { margin-top: 0; color: #fff; }
 .form-top-left p { opacity: 0.8; color: #fff; }
 
@@ -143,6 +144,8 @@ img { max-width: 100%; }
 	-moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
 	text-align: left;
 }
+
+.form-bottom .points { color: #fff; }
 
 .form-bottom form textarea {
 	height: 100px;
@@ -187,3 +190,17 @@ img { max-width: 100%; }
 
 }
 
+.classification {
+
+    color:#ff0000;
+}
+
+.counter {
+
+    color:#6ae368; 
+    font-weight: bold;
+}
+
+.form-calc {
+    text-align:center;
+}
