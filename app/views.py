@@ -16,7 +16,7 @@ def index():
 
 @app.route('/score')
 def score():
-    return render_template('interpolate.html', user_id=request.args['user_id'], oauth_token=request.args['oauth_token'])
+    return render_template('score.html', user_id=request.args['user_id'], oauth_token=request.args['oauth_token'])
 
 
 spotify = oauth.remote_app('spotify',

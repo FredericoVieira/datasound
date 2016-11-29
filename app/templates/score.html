@@ -32,20 +32,16 @@
                             <h1><strong>DataSound</strong></h1>
                         </div>
                     </div>
-
-
-                        <div class="col-sm-6 col-sm-offset-3 form-box">
-                            <div class="form-bottom">
-                                <div class="form-calc">
-                                    <h3 class="points">Sua pontuação é:</h3>
-                                    <h1 id="counter" class="counter">0</h1>
-                                    <h1 class="classification">Mainstream!</h1>
-                                </div>
+                    <div class="col-sm-6 col-sm-offset-3 form-box">
+                        <div class="form-bottom">
+                            <div class="form-calc">
+                                <h3 class="points">Sua pontuação é:</h3>
+                                <h1 id="counter" class="counter">0</h1>
+                                <h1 class="classification"></h1>
                             </div>
-                                
                         </div>
 
-
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,8 +50,9 @@
         <script src="static/js/jquery.3.1.0.min.js"></script>
         <script src="static/js/bootstrap.min.js"></script>
         <script src="static/js/jquery.backstretch.min.js"></script>
-        <script src="static/js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.js"></script>
         <script src="static/js/base.js"></script>
+        <script src="static/js/score.js"></script>
 
         <!--[if lt IE 10]>
             <script src="assets/js/placeholder.js"></script>
@@ -65,24 +62,4 @@
 
 </html>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.js"></script>
-<script src="static/js/jquery.3.1.0.min.js"></script>
-<script src="static/js/base.js"></script>
-<script>
 
-
-var format = d3.format(",d");
-
-d3.select("#counter")
-  .transition()
-    .duration(2500)
-    .on("start", function repeat() {
-      d3.active(this)
-          .tween("text", function() {
-            var that = d3.select(this),
-                i = d3.interpolateNumber(that.text().replace(/,/g, ""), 97);
-            return function(t) { that.text(format(i(t))); };
-          })
-    });
-
-</script>
