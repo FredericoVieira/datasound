@@ -82,7 +82,7 @@ $(document).ready(function() {
         } else if (score > 50 && score <= 75 ) {
             classification = "Mais um no meio do multidão!";
         } else {
-            classification = "Modinha Mainstream!"
+            classification = "Modinha Total!"
         }
         $('.classification').text(classification);
     });
