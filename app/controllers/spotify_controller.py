@@ -50,7 +50,7 @@ def spotify_authorized():
 @blueprint.route('logout')
 def logout():
     session.pop('oauth_token', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('home_controller.index'))
 
 
 @spotify.tokengetter
