@@ -1,0 +1,40 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+    <div class="top-content">
+        <div class="inner-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2 text">
+                        <h1><strong>Projeto DataSound</strong></h1>
+                        <div class="description">
+                            <p>
+                                Saiba mais sobre seus gostos musicais. Basta entrar no Spotify usando o formulário abaixo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3 form-box">
+                        <div class="form-top">
+                            <div class="form-top-left">
+                                <h3>Entrar no Spotify</h3>
+                                <p>Em breve você saberá mais sobre seu relacionamento com suas músicas.</p>
+                            </div>
+                            <div class="form-top-right">
+                                <i class="fa fa-spotify"></i>
+                            </div>
+                        </div>
+                        <div class="form-bottom">
+                            <a id="login" href="/login" class="btn btn-success">Login com Spotify</a>
+                            <a id="about" href="/about" class="btn btn-default">Sobre</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js_assets %}
+{% endblock js_assets %}
