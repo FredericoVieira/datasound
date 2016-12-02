@@ -12,8 +12,7 @@ var getPlaylists = function (user_id, oauth_token) {
             for (var i = 0; i < response.items.length; i++) {
                 playlists.push({'id':response.items[i].uri.split(':')[4], 'name':response.items[i].name, 'owner_id':response.items[i].uri.split(':')[2]});
             };
-        },
-        complete: function () {
+
             for (var i = 0; i < playlists.length; i++) {
                 $.ajax({
                     url: 'https://api.spotify.com/v1/users/'+playlists[i].owner_id+'/playlists/'+playlists[i].id+'/tracks?fields=items(track(album(artists)))',
@@ -27,10 +26,12 @@ var getPlaylists = function (user_id, oauth_token) {
                                 artists_ids.push(id);
                             }
                         };
+                        //remove from playlist when ajax finish
+                        //if playlist.lenght == 0 getArtistsPopularity();
                     }
                 });
             };
-        }
+        },
     });
 };
 
@@ -49,7 +50,7 @@ var getArtistsPopularity = function () {
                 };
             }
         });
-    }  
+    }
 }
 
 var getUserScore = function (score) {
@@ -68,17 +69,17 @@ var getUserScore = function (score) {
         });
 }
 
+$(document).ready(function() {
+
 var args = window.location.href.split("?")[1];
 var user_id = args.split("&")[0].split('=')[1];
 var oauth_token = args.split("&")[1].split('=')[1];
 
 getPlaylists(user_id, oauth_token);
 
-//$(document).ready(function() {
-    
     setTimeout(function(){
 
-        getArtistsPopularity(); 
+        getArtistsPopularity();
 
         $(document).ajaxStop(function () {
 
@@ -87,7 +88,7 @@ getPlaylists(user_id, oauth_token);
             }
 
             /*$('.testing').append("artists_ids.length = " + artists_ids.length + "<br>");
-            for (var i = 0; i < artists_ids.length; i++) {   
+            for (var i = 0; i < artists_ids.length; i++) {
                 $('.testing').append(artists_ids[i] + "<br>");
             }*/
 
@@ -98,7 +99,7 @@ getPlaylists(user_id, oauth_token);
                 $('.testing').append(artists_popularity[i].name + ":" + artists_popularity[i].popularity + "<br>");
                 popularity_sum = popularity_sum + artists_popularity[i].popularity;
             }
-            
+
             var score = popularity_sum / Object.keys(artists_popularity).length;
             getUserScore(score);
 
@@ -118,4 +119,4 @@ getPlaylists(user_id, oauth_token);
         });
 
         }, 3000);
-//});
+});
