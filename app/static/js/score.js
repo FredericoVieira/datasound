@@ -30,27 +30,26 @@ var getPlaylists = function (user_id, oauth_token) {
                     }
                 });
             };
-            //after this for with ajaxs, execute getArtistsPopularity()
         }
     });
 };
 
-
 var getArtistsPopularity = function () {
+    var div = Math.floor(artists_ids.length / 50);
+    var rem = artists_ids.length % 50;
 
-    var artists_slice = artists_ids.length / 50;
-    var artists_ids_sliced = artists_ids.slice(0,50)
-    
-    for (var i = 0; i < 1; i++) {
+    if(rem > 0) div = div + 1;
+
+    for (var i = 0; i < div; i++) {
         $.ajax({
-            url: 'https://api.spotify.com/v1/artists?ids='+artists_ids_sliced.toString(), //limit = 50
+            url: 'https://api.spotify.com/v1/artists?ids='+artists_ids.slice(0 + (50 * i), 50 + (50 * i)).toString(), //limit = 50
             success: function (response) {
                 for (var i = 0; i < response.artists.length; i++) {
                     artists_popularity.push({'name':response.artists[i].name, 'popularity':response.artists[i].popularity});
                 };
             }
         });
-    }
+    }  
 }
 
 var getUserScore = function (score) {
@@ -69,51 +68,54 @@ var getUserScore = function (score) {
         });
 }
 
+var args = window.location.href.split("?")[1];
+var user_id = args.split("&")[0].split('=')[1];
+var oauth_token = args.split("&")[1].split('=')[1];
 
+getPlaylists(user_id, oauth_token);
 
-$(document).ready(function() {
-    var args = window.location.href.split("?")[1];
-    var user_id = args.split("&")[0].split('=')[1];
-    var oauth_token = args.split("&")[1].split('=')[1];
+//$(document).ready(function() {
+    
+    setTimeout(function(){
 
-    getPlaylists(user_id, oauth_token);
+        getArtistsPopularity(); 
 
-    $(document).ajaxStop(function () {
+        $(document).ajaxStop(function () {
 
-        for (var i = 0; i < playlists.length; i++) {
-            $('.testing').append(playlists[i].name + "<br>");
-        }
+            for (var i = 0; i < playlists.length; i++) {
+                $('.testing').append(playlists[i].name + "<br>");
+            }
 
+            /*$('.testing').append("artists_ids.length = " + artists_ids.length + "<br>");
+            for (var i = 0; i < artists_ids.length; i++) {   
+                $('.testing').append(artists_ids[i] + "<br>");
+            }*/
 
-        $('.testing').append("artists_ids.length = " + artists_ids.length + "<br>");
-        for (var i = 0; i < artists_ids.length; i++) {   
-            $('.testing').append(artists_ids[i] + "<br>");
-        }
+            var popularity_sum = 0;
 
-        var popularity_sum = 0;
+            $('.testing').append("artists_popularity.length = " + artists_popularity.length + "<br>");
+            for (var i = 0; i < artists_popularity.length; i++) {
+                $('.testing').append(artists_popularity[i].name + ":" + artists_popularity[i].popularity + "<br>");
+                popularity_sum = popularity_sum + artists_popularity[i].popularity;
+            }
+            
+            var score = popularity_sum / Object.keys(artists_popularity).length;
+            getUserScore(score);
 
-        $('.testing').append("artists_popularity.length = " + artists_popularity.length + "<br>");
-        for (var i = 0; i < artists_popularity.length; i++) {
-            $('.testing').append(artists_popularity[i].name + ":" + artists_popularity[i].popularity + "<br>");
-            popularity_sum = popularity_sum + artists_popularity[i].popularity;
-        }
-        
+            var classification;
+            if (score <= 20) {
+                classification = "Antiquado!";
+            } else if (score > 20 && score <= 35 ) {
+                classification = "Alternativo!";
+            } else if (score > 35 && score <=50 ) {
+                classification = "Descolado!";
+            } else if (score > 50 && score <= 75 ) {
+                classification = "Mais um no meio do multidão!";
+            } else {
+                classification = "Modinha Total!"
+            }
+            $('.classification').text(classification);
+        });
 
-        var score = popularity_sum / Object.keys(artists_popularity).length;
-        getUserScore(score);
-
-        var classification;
-        if (score <= 20) {
-            classification = "Antiquado!";
-        } else if (score > 20 && score <= 35 ) {
-            classification = "Alternativo!";
-        } else if (score > 35 && score <=50 ) {
-            classification = "Descolado!";
-        } else if (score > 50 && score <= 75 ) {
-            classification = "Mais um no meio do multidão!";
-        } else {
-            classification = "Modinha Total!"
-        }
-        $('.classification').text(classification);
-    });
-});
+        }, 3000);
+//});
