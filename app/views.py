@@ -27,7 +27,7 @@ def about():
 spotify = oauth.remote_app('spotify',
                            consumer_key=SPOTIFY_APP_ID,
                            consumer_secret=SPOTIFY_APP_SECRET,
-                           request_token_params={'scope': 'user-read-email'},
+                           request_token_params={'scope': 'playlist-read-private'},
                            base_url='https://accounts.spotify.com',
                            request_token_url=None,
                            access_token_url='/api/token',
