@@ -9,7 +9,6 @@ class Config(object):
     SPOTIFY_APP_SECRET = getenv("DATASOUND_SPOTIFY_APP_SECRET")
     SECRET_KEY = getenv("DATASOUND_SECRET_KEY")
 
-
 class Production(Config):
     pass
 
