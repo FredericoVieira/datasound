@@ -4,7 +4,7 @@ var artists_popularity = [];
 
 var getPlaylists = function (user_id, oauth_token) {
     $.ajax({
-        url: 'https://api.spotify.com/v1/users/'+user_id+'/playlists', //limit = 20
+        url: 'https://api.spotify.com/v1/users/'+user_id+'/playlists', //Test user case over 20 playlists
         beforeSend: function (xhr) {
             xhr.setRequestHeader ("Authorization", "Bearer " + oauth_token);
         },
@@ -13,21 +13,25 @@ var getPlaylists = function (user_id, oauth_token) {
                 playlists.push({'id':response.items[i].uri.split(':')[4], 'name':response.items[i].name, 'owner_id':response.items[i].uri.split(':')[2]});
             };
 
-            for (var i = 0; i < playlists.length; i++) {
+            var playlists_aux = playlists.slice();
+
+            for (var j = 0; j < playlists.length; j++) {
                 $.ajax({
-                    url: 'https://api.spotify.com/v1/users/'+playlists[i].owner_id+'/playlists/'+playlists[i].id+'/tracks?fields=items(track(album(artists)))',
+                    //Try to simplify the request url by passing the sporitfy parameters
+                    url: 'https://api.spotify.com/v1/users/'+playlists[j].owner_id+'/playlists/'+playlists[j].id+'/tracks?fields=items(track(album(artists)))',
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader ("Authorization", "Bearer " + oauth_token);
                     },
                     success: function (response) {
-                        for (var i = 0; i < response.items.length; i++) {
-                            id = response.items[i].track.album.artists[0].id;
+                        for (var k = 0; k < response.items.length; k++) {
+                            id = response.items[k].track.album.artists[0].id;
                             if (artists_ids.indexOf(id) === -1) {
                                 artists_ids.push(id);
                             }
                         };
-                        //remove from playlist when ajax finish
-                        //if playlist.lenght == 0 getArtistsPopularity();
+                        
+                        playlists_aux.shift();
+                        if (playlists_aux.length == 0) getArtistsPopularity();
                     }
                 });
             };
@@ -43,7 +47,7 @@ var getArtistsPopularity = function () {
 
     for (var i = 0; i < div; i++) {
         $.ajax({
-            url: 'https://api.spotify.com/v1/artists?ids='+artists_ids.slice(0 + (50 * i), 50 + (50 * i)).toString(), //limit = 50
+            url: 'https://api.spotify.com/v1/artists?ids=' + artists_ids.slice(0 + (50 * i), 50 + (50 * i)).toString(), //Limit of 50 artists per request
             success: function (response) {
                 for (var i = 0; i < response.artists.length; i++) {
                     artists_popularity.push({'name':response.artists[i].name, 'popularity':response.artists[i].popularity});
@@ -71,52 +75,49 @@ var getUserScore = function (score) {
 
 $(document).ready(function() {
 
-var args = window.location.href.split("?")[1];
-var user_id = args.split("&")[0].split('=')[1];
-var oauth_token = args.split("&")[1].split('=')[1];
+    $('.more-info').hide();
 
-getPlaylists(user_id, oauth_token);
+    var args = window.location.href.split("?")[1];
+    var user_id = args.split("&")[0].split('=')[1];
+    var oauth_token = args.split("&")[1].split('=')[1];
 
-    setTimeout(function(){
+    getPlaylists(user_id, oauth_token);
 
-        getArtistsPopularity();
+    $(document).ajaxStop(function () {
 
-        $(document).ajaxStop(function () {
+        var playlists_name = [];
+        for (var i = 0; i < playlists.length; i++) {
+            playlists_name.push(playlists[i].name);
+        }
+        $('.more-info').append("Playlists: " + playlists_name.join(", ") + "<br>");
 
-            for (var i = 0; i < playlists.length; i++) {
-                $('.testing').append(playlists[i].name + "<br>");
-            }
+        var popularity_sum = 0;
 
-            /*$('.testing').append("artists_ids.length = " + artists_ids.length + "<br>");
-            for (var i = 0; i < artists_ids.length; i++) {
-                $('.testing').append(artists_ids[i] + "<br>");
-            }*/
+        for (var i = 0; i < artists_popularity.length; i++) {
+            $('.more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
+            popularity_sum = popularity_sum + artists_popularity[i].popularity;
+        }
 
-            var popularity_sum = 0;
+        var score = popularity_sum / artists_popularity.length;
+        getUserScore(score);
 
-            $('.testing').append("artists_popularity.length = " + artists_popularity.length + "<br>");
-            for (var i = 0; i < artists_popularity.length; i++) {
-                $('.testing').append(artists_popularity[i].name + ":" + artists_popularity[i].popularity + "<br>");
-                popularity_sum = popularity_sum + artists_popularity[i].popularity;
-            }
+        var classification;
+        if (score <= 20) {
+            classification = "Antiquado!";
+        } else if (score > 20 && score <= 35 ) {
+            classification = "Alternativo!";
+        } else if (score > 35 && score <=50 ) {
+            classification = "Descolado!";
+        } else if (score > 50 && score <= 75 ) {
+            classification = "Mais um no meio do multidão!";
+        } else {
+            classification = "Modinha Total!"
+        }
+        $('.classification').text(classification);
+    });
 
-            var score = popularity_sum / Object.keys(artists_popularity).length;
-            getUserScore(score);
-
-            var classification;
-            if (score <= 20) {
-                classification = "Antiquado!";
-            } else if (score > 20 && score <= 35 ) {
-                classification = "Alternativo!";
-            } else if (score > 35 && score <=50 ) {
-                classification = "Descolado!";
-            } else if (score > 50 && score <= 75 ) {
-                classification = "Mais um no meio do multidão!";
-            } else {
-                classification = "Modinha Total!"
-            }
-            $('.classification').text(classification);
-        });
-
-        }, 3000);
+    $('#more-info').click(function() {
+        $('#more-info').hide();
+        $('.more-info').show();
+    });
 });
