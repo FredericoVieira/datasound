@@ -8,7 +8,7 @@ class Config(object):
     SPOTIFY_APP_ID = getenv("DATASOUND_SPOTIFY_APP_ID")
     SPOTIFY_APP_SECRET = getenv("DATASOUND_SPOTIFY_APP_SECRET")
     SECRET_KEY = getenv("DATASOUND_SECRET_KEY")
-    PORT = getenv("PORT", 8000)
+    PORT = getenv("PORT", 5000)
 
 
 class Production(Config):
