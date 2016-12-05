@@ -3,5 +3,5 @@ function getRandomInt(min, max) {
 }
 
 $(document).ready(function() {
-    $.backstretch("static/img/backgrounds/"+getRandomInt(0,5)+".jpg");
+    $.backstretch("static/img/backgrounds/" + getRandomInt(0, 5) + ".jpg");
 });
