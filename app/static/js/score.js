@@ -73,6 +73,14 @@ var getUserScore = function (score) {
         });
 }
 
+var compare = function (a, b) {
+    if (a.popularity < b.popularity)
+        return -1;
+    if (a.popularity > b.popularity)
+        return 1;
+    return 0;
+}
+
 $(document).ready(function() {
 
     $('.more-info').hide();
@@ -89,12 +97,16 @@ $(document).ready(function() {
         for (var i = 0; i < playlists.length; i++) {
             playlists_name.push(playlists[i].name);
         }
-        $('.more-info').append("Playlists: " + playlists_name.join(", ") + "<br>");
+        $('.more-info').append("Playlists Analisadas: " + playlists_name.join(", ") + "<br>");
+
+        artists_popularity.sort(compare);
+        var last = artists_popularity.length - 1;
+        $('.more-info').append("Artista mais popular: " + artists_popularity[last].name + " (" + artists_popularity[last].popularity + ")" + "<br>");
+        $('.more-info').append("Artista menos popular: " + artists_popularity[0].name + " (" + artists_popularity[0].popularity + ")" + "<br>");
 
         var popularity_sum = 0;
 
         for (var i = 0; i < artists_popularity.length; i++) {
-            $('.more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
             popularity_sum = popularity_sum + artists_popularity[i].popularity;
         }
 
