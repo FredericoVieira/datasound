@@ -194,7 +194,7 @@ img { max-width: 100%; }
 }
 
 .counter {
-    color:#6ae368; 
+    color:#6ae368;
     font-weight: bold;
 }
 
@@ -206,5 +206,25 @@ a#about {
     color: #fff;
     background-color: #b5b5b5;
     border-color: #b5b5b5;
-    text-align:left; 
+    text-align:left;
+}
+
+#footer {
+    width: 100%;
+    bottom: 0;
+    display: block;
+    position: absolute;
+}
+
+#footer > ul{
+    list-style-type: none;
+}
+
+#footer > ul > li > a,
+#footer > ul > li > a > .label{
+    color: #8e8e8e;
+}
+
+#footer > ul > li > a:hover{
+    color: white;
 }

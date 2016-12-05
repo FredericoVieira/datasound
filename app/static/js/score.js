@@ -29,7 +29,7 @@ var getPlaylists = function (user_id, oauth_token) {
                                 artists_ids.push(id);
                             }
                         };
-                        
+
                         playlists_aux.shift();
                         if (playlists_aux.length == 0) getArtistsPopularity();
                     }
