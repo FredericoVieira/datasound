@@ -2,7 +2,7 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     font-weight: 300;
-    color: #888;
+    color: #fff;
     line-height: 30px;
     text-align: center;
 }
@@ -158,6 +158,10 @@ img { max-width: 100%; }
 	border-color: #de615e;
 }
 
+.form-bottom .form-calc p {
+    opacity: 0.8;
+}
+
 .social-login {
 	margin-top: 35px;
 }
@@ -190,11 +194,12 @@ img { max-width: 100%; }
 }
 
 .classification {
-    color:#ff0000;
+    color: #6ae368;
+    font-weight: inherit;
 }
 
 .counter {
-    color:#6ae368;
+    color: #6ae368;
     font-weight: bold;
 }
 

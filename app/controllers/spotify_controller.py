@@ -24,7 +24,6 @@ spotify = oauth.remote_app(
 def login():
     callback = url_for(
         'spotify_controller.spotify_authorized',
-        next=request.args.get('next') or request.referrer or None,
         _external=True
     )
     return spotify.authorize(callback=callback)

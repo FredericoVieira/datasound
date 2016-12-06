@@ -4,7 +4,7 @@ var artists_popularity = [];
 
 var getPlaylists = function (user_id, oauth_token) {
     $.ajax({
-        url: 'https://api.spotify.com/v1/users/'+user_id+'/playlists', //Test user case over 20 playlists
+        url: 'https://api.spotify.com/v1/users/'+user_id+'/playlists', //Limit 20 playlists per request
         beforeSend: function (xhr) {
             xhr.setRequestHeader ("Authorization", "Bearer " + oauth_token);
         },
@@ -101,8 +101,12 @@ $(document).ready(function() {
 
         artists_popularity.sort(compare);
         var last = artists_popularity.length - 1;
-        $('.more-info').append("Artista mais popular: " + artists_popularity[last].name + " (" + artists_popularity[last].popularity + ")" + "<br>");
-        $('.more-info').append("Artista menos popular: " + artists_popularity[0].name + " (" + artists_popularity[0].popularity + ")" + "<br>");
+        $('.more-info').append("Artista mais popular - " + artists_popularity[last].name + ": " + artists_popularity[last].popularity + "<br>");
+        $('.more-info').append("Artista menos popular - " + artists_popularity[0].name + ": " + artists_popularity[0].popularity + "<br>");
+
+        for (var i = 0; i < artists_popularity.length; i++) {
+            $('.more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
+        }
 
         var popularity_sum = 0;
 
