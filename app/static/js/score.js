@@ -130,9 +130,13 @@ $(document).ready(function() {
             classification = "Descolado!";
         } else if (score > 50 && score <= 75 ) {
             classification = "Mais um no meio do multidão!";
+            $('.classification').css('margin-top', 'auto');
         } else {
             classification = "Modinha Total!"
         }
-        $('.classification').text(classification);
+        setTimeout(function() {
+            $('.classification').text(classification);
+            $('#more-info-anchor').show();
+        }, 2500);
     });
 });
