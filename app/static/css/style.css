@@ -15,7 +15,7 @@ a, a:hover, a:focus {
     -o-transition: all .3s; -moz-transition: all .3s; -webkit-transition: all .3s; -ms-transition: all .3s; transition: all .3s;
 }
 
-h1, h2 {
+h1 {
 	margin-top: 10px;
 	font-size: 38px;
     font-weight: 100;
@@ -142,6 +142,7 @@ img { max-width: 100%; }
 	background: rgba(0, 0, 0, 0.3);
 	-moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
 	text-align: left;
+    margin-bottom: 10px;
 }
 
 .form-bottom .points { color: #fff; }
@@ -232,4 +233,12 @@ a#about {
 
 #footer > ul > li > a:hover{
     color: white;
+}
+
+h2 {
+    margin-top: 550px;
+}
+
+#more-info-anchor {
+    display: none;
 }

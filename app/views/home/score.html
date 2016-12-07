@@ -19,8 +19,16 @@
                     </div>
                 </div>
             </div>
-            <a id="more-info" href="#"><i class="fa fa-angle-double-down"> Mais Informações</i></a>
-            <div class="more-info col-sm-6 col-sm-offset-3"></div>
+            <div class="row">
+                <div class="col-md-offset-5 col-md-2">
+                    <a id="more-info-anchor" href="#more-info"><i class="fa fa-angle-double-down fa-4x"></i></a>
+                </div>
+            </div>
+            <div id="more-info" class="col-sm-6 col-sm-offset-3">
+                <div id="scroll"></div>
+                <h2>Playlists analisadas</h2>
+            </div>
+
         </div>
 
     </div>
@@ -28,5 +36,7 @@
 
 {% block js_assets %}
     <script type="text/javascript" src="static/js/d3.4.4.0.js"></script>
+    <script src="static/js/jquery.scrollTo.min.js"></script>
+    <script src="static/js/jquery.localScroll.min.js"></script>
     <script type="text/javascript" src="static/js/score.js"></script>
 {% endblock js_assets %}

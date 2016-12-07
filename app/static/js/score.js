@@ -81,9 +81,13 @@ var compare = function (a, b) {
     return 0;
 }
 
+
 $(document).ready(function() {
 
-    $('.more-info').hide();
+    $.localScroll({
+        offset: 420,
+        duration: 1200
+    });
 
     var args = window.location.href.split("?")[1];
     var user_id = args.split("&")[0].split('=')[1];
@@ -92,20 +96,20 @@ $(document).ready(function() {
     getPlaylists(user_id, oauth_token);
 
     $(document).ajaxStop(function () {
-
         var playlists_name = [];
         for (var i = 0; i < playlists.length; i++) {
-            playlists_name.push(playlists[i].name);
-        }
-        $('.more-info').append("Playlists Analisadas: " + playlists_name.join(", ") + "<br>");
+            var p = $($.parseHTML('<p></p>'));
+            p.html(playlists[i].name);
+            $('#more-info').append(p);
+        }        
 
         artists_popularity.sort(compare);
         var last = artists_popularity.length - 1;
-        $('.more-info').append("Artista mais popular - " + artists_popularity[last].name + ": " + artists_popularity[last].popularity + "<br>");
-        $('.more-info').append("Artista menos popular - " + artists_popularity[0].name + ": " + artists_popularity[0].popularity + "<br>");
+        $('#more-info').append("Artista mais popular - " + artists_popularity[last].name + ": " + artists_popularity[last].popularity + "<br>");
+        $('#more-info').append("Artista menos popular - " + artists_popularity[0].name + ": " + artists_popularity[0].popularity + "<br>");
 
         for (var i = 0; i < artists_popularity.length; i++) {
-            $('.more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
+            $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
         }
 
         var popularity_sum = 0;
@@ -130,10 +134,5 @@ $(document).ready(function() {
             classification = "Modinha Total!"
         }
         $('.classification').text(classification);
-    });
-
-    $('#more-info').click(function() {
-        $('#more-info').hide();
-        $('.more-info').show();
     });
 });
