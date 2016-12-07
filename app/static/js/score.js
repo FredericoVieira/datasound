@@ -10,7 +10,12 @@ var getPlaylists = function (user_id, oauth_token) {
         },
         success: function (response) {
             for (var i = 0; i < response.items.length; i++) {
-                playlists.push({'id':response.items[i].uri.split(':')[4], 'name':response.items[i].name, 'owner_id':response.items[i].uri.split(':')[2]});
+                playlists.push({
+                    'id':response.items[i].uri.split(':')[4],
+                    'name':response.items[i].name,
+                    'owner_id':response.items[i].uri.split(':')[2],
+                    'image': !response.items[i].images.length ? 'https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg' : response.items[i].images[0].url
+                });
             };
 
             var playlists_aux = playlists.slice();
@@ -85,7 +90,7 @@ var compare = function (a, b) {
 $(document).ready(function() {
 
     $.localScroll({
-        offset: 420,
+        offset: 0,
         duration: 1200
     });
 
@@ -98,19 +103,37 @@ $(document).ready(function() {
     $(document).ajaxStop(function () {
         var playlists_name = [];
         for (var i = 0; i < playlists.length; i++) {
+            var playlist = $($.parseHTML('<div></div>'));
+            var img = $($.parseHTML('<img>'));
             var p = $($.parseHTML('<p></p>'));
-            p.html(playlists[i].name);
-            $('#more-info').append(p);
-        }        
+
+            img.attr('src', playlists[i].image)
+                .addClass('playlist-img img-responsive');
+            p.html(playlists[i].name.substring(0, 60))
+                .attr('title', playlists[i].name);
+
+            playlist.addClass('playlist')
+                .addClass('col-xs-6 col-sm-4 col-md-3 col-lg-2')
+                .append(img)
+                .append(p);
+            $('#playlists').append(playlist);
+
+        }
 
         artists_popularity.sort(compare);
         var last = artists_popularity.length - 1;
-        $('#more-info').append("Artista mais popular - " + artists_popularity[last].name + ": " + artists_popularity[last].popularity + "<br>");
-        $('#more-info').append("Artista menos popular - " + artists_popularity[0].name + ": " + artists_popularity[0].popularity + "<br>");
+        var p = $($.parseHTML('<p></p>'));
+        $('#most-popular-artist').append(p.clone().html(artists_popularity[last].name));
+        // p.clone().html(artists_popularity[last].popularity);
+        // $('#most-popular-artist').append(p);
 
-        for (var i = 0; i < artists_popularity.length; i++) {
-            $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
-        }
+        $('#least-popular-artist').append(p.clone().html(artists_popularity[0].name));
+        // p.clone().html(artists_popularity[0].popularity);
+        // $('#least-popular-artist').append(p);
+
+        // for (var i = 0; i < artists_popularity.length; i++) {
+        //     $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
+        // }
 
         var popularity_sum = 0;
 

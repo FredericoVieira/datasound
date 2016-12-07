@@ -174,6 +174,27 @@ img { max-width: 100%; }
 	margin-top: 25px;
 }
 
+#playlists .playlist-img {
+
+}
+
+#playlists .playlist {
+    min-height: 360px;
+}
+
+#playlists .playlist p {
+    font-family: Helvetica;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+#artists {
+    text-align: left;
+}
+
 
 /***** Media queries *****/
 
@@ -235,10 +256,18 @@ a#about {
     color: white;
 }
 
-h2 {
-    margin-top: 550px;
+#more-info h2 {
+    margin-bottom: 30px;
 }
 
 #more-info-anchor {
     display: none;
+}
+
+.playlists-wrapper {
+    background-color: #232323;
+}
+
+.more-info-anchor-wrapper {
+   margin-bottom: 550px; 
 }
