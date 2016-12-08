@@ -262,6 +262,18 @@ a#about {
 
 #more-info-anchor {
     display: none;
+    color: #6ae368;
+}
+
+#more-info-anchor:hover {
+    border-color: #6ae368;
+}
+
+.btn-circle {
+    padding: 3px 16px;
+    border: 2px solid #ffffff;
+    border-radius: 100%;
+    font-size: 45px;
 }
 
 .playlists-wrapper {
