@@ -140,8 +140,7 @@ img { max-width: 100%; }
 	background: rgba(0, 0, 0, 0.35);
 	-moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
 	text-align: left;
-    margin-bottom: 10px;
-    min-height: 285px;
+    margin-bottom: 20px;
 }
 
 .form-bottom .points { color: #fff; }
@@ -282,4 +281,9 @@ a#about {
 
 .more-info-anchor-wrapper {
    margin-bottom: 550px; 
+}
+
+#artists img{
+    max-height: 250px;
+    border-radius: 100%;
 }

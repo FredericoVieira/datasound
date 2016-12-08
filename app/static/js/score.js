@@ -30,7 +30,7 @@ var getPlaylists = function (user_id, oauth_token) {
                     success: function (response) {
                         for (var k = 0; k < response.items.length; k++) {
                             id = response.items[k].track.album.artists[0].id;
-                            if (artists_ids.indexOf(id) === -1) {
+                            if (artists_ids.indexOf(id) === -1 && id != '0LyfQWJT6nXafLPZqxe9Of') { //Various Artists id case
                                 artists_ids.push(id);
                             }
                         };
@@ -55,7 +55,12 @@ var getArtistsPopularity = function () {
             url: 'https://api.spotify.com/v1/artists?ids=' + artists_ids.slice(0 + (50 * i), 50 + (50 * i)).toString(), //Limit of 50 artists per request
             success: function (response) {
                 for (var i = 0; i < response.artists.length; i++) {
-                    artists_popularity.push({'name':response.artists[i].name, 'popularity':response.artists[i].popularity});
+                    artists_popularity.push({
+                        'id': response.artists[i].id, 
+                        'name':response.artists[i].name, 
+                        'popularity':response.artists[i].popularity,
+                        'image': !response.artists[i].images.length ? 'https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg' : response.artists[i].images[0].url
+                    });
                 };
             }
         });
@@ -122,18 +127,35 @@ $(document).ready(function() {
 
         artists_popularity.sort(compare);
         var last = artists_popularity.length - 1;
+
+        var most_popular_artist = $($.parseHTML('<div></div>'));
+        var img_mp = $($.parseHTML('<img>'));
+        img_mp.attr('src', artists_popularity[last].image)
+                .addClass('artist-img img-responsive');
+
+        most_popular_artist.append(img_mp);
+
+        $('#most-popular-artist').append(most_popular_artist);
+
         var p = $($.parseHTML('<p></p>'));
-        $('#most-popular-artist').append(p.clone().html(artists_popularity[last].name));
-        // p.clone().html(artists_popularity[last].popularity);
-        // $('#most-popular-artist').append(p);
+        $('#most-popular-artist').append(p.clone().html(artists_popularity[last].name + ': ' + artists_popularity[last].popularity));
+        //<i class="fa fa-star"></i>
 
-        $('#least-popular-artist').append(p.clone().html(artists_popularity[0].name));
-        // p.clone().html(artists_popularity[0].popularity);
-        // $('#least-popular-artist').append(p);
+        var least_popular_artist = $($.parseHTML('<div></div>'));
+        var img_lp = $($.parseHTML('<img>'));
+        img_lp.attr('src', artists_popularity[0].image)
+                .addClass('artist-img img-responsive');
 
-        // for (var i = 0; i < artists_popularity.length; i++) {
-        //     $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
-        // }
+        least_popular_artist.append(img_lp);
+
+        $('#least-popular-artist').append(least_popular_artist);
+
+        $('#least-popular-artist').append(p.clone().html(artists_popularity[0].name + ': ' + artists_popularity[0].popularity));
+        //<i class="fa fa-star-o"></i>
+
+        //for (var i = 0; i < artists_popularity.length; i++) {
+        //    $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
+        //}
 
         var popularity_sum = 0;
 
