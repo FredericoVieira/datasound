@@ -83,6 +83,82 @@ var getUserScore = function (score) {
         });
 }
 
+var mountPlaylists = function () {
+    var playlists_name = [];
+    for (var i = 0; i < playlists.length; i++) {
+        var playlist = $($.parseHTML('<div></div>'));
+        var img = $($.parseHTML('<img>'));
+        var p = $($.parseHTML('<p></p>'));
+
+        img.attr('src', playlists[i].image)
+            .addClass('playlist-img img-responsive');
+        p.html(playlists[i].name.substring(0, 60))
+            .attr('title', playlists[i].name);
+
+        playlist.addClass('playlist')
+            .addClass('col-xs-6 col-sm-4 col-md-3 col-lg-2')
+            .append(img)
+            .append(p);
+        $('#playlists').append(playlist);
+    }
+}
+
+var mountMostAndLeastPopularityArtists = function () {
+    artists_popularity.sort(compare);
+    var last = artists_popularity.length - 1;
+
+    var most_popular_artist = $($.parseHTML('<div></div>'));
+    var img_mp = $($.parseHTML('<img>'));
+    img_mp.attr('src', artists_popularity[last].image)
+            .addClass('artist-img img-responsive');
+
+    most_popular_artist.append(img_mp);
+    $('#most-popular-artist').append(most_popular_artist);
+
+    var p = $($.parseHTML('<p></p>'));
+    $('#most-popular-artist').append(p.clone().html(artists_popularity[last].name + ': ' + artists_popularity[last].popularity));
+    //<i class="fa fa-star"></i>
+
+    var least_popular_artist = $($.parseHTML('<div></div>'));
+    var img_lp = $($.parseHTML('<img>'));
+    img_lp.attr('src', artists_popularity[0].image)
+            .addClass('artist-img img-responsive');
+
+    least_popular_artist.append(img_lp);
+    $('#least-popular-artist').append(least_popular_artist);
+
+    $('#least-popular-artist').append(p.clone().html(artists_popularity[0].name + ': ' + artists_popularity[0].popularity));
+    //<i class="fa fa-star-o"></i>
+}
+
+var mountScoreAndClassification = function () {
+    var popularity_sum = 0;
+    for (var i = 0; i < artists_popularity.length; i++) {
+        popularity_sum = popularity_sum + artists_popularity[i].popularity;
+    }
+
+    var score = popularity_sum / artists_popularity.length;
+    getUserScore(score);
+
+    var classification;
+    if (score <= 20) {
+        classification = "Antiquado!";
+    } else if (score > 20 && score <= 35 ) {
+        classification = "Alternativo!";
+    } else if (score > 35 && score <=50 ) {
+        classification = "Descolado!";
+    } else if (score > 50 && score <= 75 ) {
+        classification = "Mais um no meio do multidão!";
+    } else {
+        classification = "Modinha Total!"
+    }
+
+    setTimeout(function() {
+            $('.classification').text(classification);
+            $('#more-info-anchor').show();
+    }, 2500);
+}
+
 var compare = function (a, b) {
     if (a.popularity < b.popularity)
         return -1;
@@ -90,7 +166,6 @@ var compare = function (a, b) {
         return 1;
     return 0;
 }
-
 
 $(document).ready(function() {
 
@@ -106,82 +181,13 @@ $(document).ready(function() {
     getPlaylists(user_id, oauth_token);
 
     $(document).ajaxStop(function () {
-        var playlists_name = [];
-        for (var i = 0; i < playlists.length; i++) {
-            var playlist = $($.parseHTML('<div></div>'));
-            var img = $($.parseHTML('<img>'));
-            var p = $($.parseHTML('<p></p>'));
 
-            img.attr('src', playlists[i].image)
-                .addClass('playlist-img img-responsive');
-            p.html(playlists[i].name.substring(0, 60))
-                .attr('title', playlists[i].name);
-
-            playlist.addClass('playlist')
-                .addClass('col-xs-6 col-sm-4 col-md-3 col-lg-2')
-                .append(img)
-                .append(p);
-            $('#playlists').append(playlist);
-
-        }
-
-        artists_popularity.sort(compare);
-        var last = artists_popularity.length - 1;
-
-        var most_popular_artist = $($.parseHTML('<div></div>'));
-        var img_mp = $($.parseHTML('<img>'));
-        img_mp.attr('src', artists_popularity[last].image)
-                .addClass('artist-img img-responsive');
-
-        most_popular_artist.append(img_mp);
-
-        $('#most-popular-artist').append(most_popular_artist);
-
-        var p = $($.parseHTML('<p></p>'));
-        $('#most-popular-artist').append(p.clone().html(artists_popularity[last].name + ': ' + artists_popularity[last].popularity));
-        //<i class="fa fa-star"></i>
-
-        var least_popular_artist = $($.parseHTML('<div></div>'));
-        var img_lp = $($.parseHTML('<img>'));
-        img_lp.attr('src', artists_popularity[0].image)
-                .addClass('artist-img img-responsive');
-
-        least_popular_artist.append(img_lp);
-
-        $('#least-popular-artist').append(least_popular_artist);
-
-        $('#least-popular-artist').append(p.clone().html(artists_popularity[0].name + ': ' + artists_popularity[0].popularity));
-        //<i class="fa fa-star-o"></i>
+        mountPlaylists();
+        mountMostAndLeastPopularityArtists();
+        mountScoreAndClassification();
 
         //for (var i = 0; i < artists_popularity.length; i++) {
         //    $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
         //}
-
-        var popularity_sum = 0;
-
-        for (var i = 0; i < artists_popularity.length; i++) {
-            popularity_sum = popularity_sum + artists_popularity[i].popularity;
-        }
-
-        var score = popularity_sum / artists_popularity.length;
-        getUserScore(score);
-
-        var classification;
-        if (score <= 20) {
-            classification = "Antiquado!";
-        } else if (score > 20 && score <= 35 ) {
-            classification = "Alternativo!";
-        } else if (score > 35 && score <=50 ) {
-            classification = "Descolado!";
-        } else if (score > 50 && score <= 75 ) {
-            classification = "Mais um no meio do multidão!";
-            $('.classification').css('margin-top', 'auto');
-        } else {
-            classification = "Modinha Total!"
-        }
-        setTimeout(function() {
-            $('.classification').text(classification);
-            $('#more-info-anchor').show();
-        }, 2500);
     });
 });
