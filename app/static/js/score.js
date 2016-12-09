@@ -83,6 +83,34 @@ var getUserScore = function (score) {
         });
 }
 
+var mountScoreAndClassification = function () {
+    var popularity_sum = 0;
+    for (var i = 0; i < artists_popularity.length; i++) {
+        popularity_sum = popularity_sum + artists_popularity[i].popularity;
+    }
+
+    var score = popularity_sum / artists_popularity.length;
+    getUserScore(score);
+
+    var classification;
+    if (score <= 20) {
+        classification = "Antiquado!";
+    } else if (score > 20 && score <= 35 ) {
+        classification = "Alternativo!";
+    } else if (score > 35 && score <=50 ) {
+        classification = "Descolado!";
+    } else if (score > 50 && score <= 75 ) {
+        classification = "Mais um no meio do multidão!";
+    } else {
+        classification = "Modinha Total!"
+    }
+
+    setTimeout(function() {
+            $('.classification').text(classification);
+            $('#more-info-anchor').show();
+    }, 2500);
+}
+
 var mountPlaylists = function () {
     var playlists_name = [];
     for (var i = 0; i < playlists.length; i++) {
@@ -115,9 +143,8 @@ var mountMostAndLeastPopularityArtists = function () {
     most_popular_artist.append(img_mp);
     $('#most-popular-artist').append(most_popular_artist);
 
-    var p = $($.parseHTML('<p></p>'));
+    var p = $($.parseHTML('<h2></h2>'));
     $('#most-popular-artist').append(p.clone().html(artists_popularity[last].name + ': ' + artists_popularity[last].popularity));
-    //<i class="fa fa-star"></i>
 
     var least_popular_artist = $($.parseHTML('<div></div>'));
     var img_lp = $($.parseHTML('<img>'));
@@ -128,35 +155,9 @@ var mountMostAndLeastPopularityArtists = function () {
     $('#least-popular-artist').append(least_popular_artist);
 
     $('#least-popular-artist').append(p.clone().html(artists_popularity[0].name + ': ' + artists_popularity[0].popularity));
-    //<i class="fa fa-star-o"></i>
 }
 
-var mountScoreAndClassification = function () {
-    var popularity_sum = 0;
-    for (var i = 0; i < artists_popularity.length; i++) {
-        popularity_sum = popularity_sum + artists_popularity[i].popularity;
-    }
-
-    var score = popularity_sum / artists_popularity.length;
-    getUserScore(score);
-
-    var classification;
-    if (score <= 20) {
-        classification = "Antiquado!";
-    } else if (score > 20 && score <= 35 ) {
-        classification = "Alternativo!";
-    } else if (score > 35 && score <=50 ) {
-        classification = "Descolado!";
-    } else if (score > 50 && score <= 75 ) {
-        classification = "Mais um no meio do multidão!";
-    } else {
-        classification = "Modinha Total!"
-    }
-
-    setTimeout(function() {
-            $('.classification').text(classification);
-            $('#more-info-anchor').show();
-    }, 2500);
+var mountGraphsAnalyses = function () {
 }
 
 var compare = function (a, b) {
@@ -182,9 +183,11 @@ $(document).ready(function() {
 
     $(document).ajaxStop(function () {
 
+        mountScoreAndClassification();
         mountPlaylists();
         mountMostAndLeastPopularityArtists();
-        mountScoreAndClassification();
+        mountGraphsAnalyses();
+        
 
         //for (var i = 0; i < artists_popularity.length; i++) {
         //    $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
