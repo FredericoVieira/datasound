@@ -22,13 +22,13 @@
                 </div>
                 <div class="row more-info-anchor-wrapper">
                     <div class="col-md-offset-5 col-md-2">
-                        <a id="more-info-anchor" href="#more-info" class="btn btn-circle"><i class="fa fa-angle-double-down"></i></a>
+                        <a id="more-info-anchor" href="#playlists-info" class="btn btn-circle"><i class="fa fa-angle-double-down"></i></a>
                     </div>
                 </div>
             </section>
             <section class="container-fluid playlists-wrapper">
                 <div class="row">
-                    <div id="more-info" class="col-sm-6 col-sm-offset-3">
+                    <div id="playlists-info" class="col-sm-6 col-sm-offset-3">
                         <h2>Playlists analisadas</h2>
                     </div>
                 </div>
@@ -52,6 +52,9 @@
                     </div>
                 </div>
                 <div class="row" id="graphs">
+                    <div id="bar-top-artists"></div>
+                    <div id="bar-least-artists"></div>
+                    <div id="bar-top-least-artists"></div>
                 </div>
             </section>
         </div>
@@ -59,8 +62,10 @@
 {% endblock content %}
 
 {% block js_assets %}
-    <script type="text/javascript" src="static/js/d3.4.4.0.js"></script>
-    <script src="static/js/jquery.scrollTo.min.js"></script>
-    <script src="static/js/jquery.localScroll.min.js"></script>
+    <script type="text/javascript" src="static/js/d3.min.js"></script>
+    <script type="text/javascript" src="static/js/d3plus.min.js"></script>
+    <script type="text/javascript" src="static/js/countUp.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.scrollTo.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.localScroll.min.js"></script>
     <script type="text/javascript" src="static/js/score.js"></script>
 {% endblock js_assets %}

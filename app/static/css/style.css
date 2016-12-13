@@ -155,7 +155,7 @@ img { max-width: 100%; }
 }
 
 .more-info-anchor-wrapper {
-   margin-bottom: 550px; 
+   margin-bottom: 550px;
 }
 
 .btn-circle {
@@ -174,8 +174,8 @@ img { max-width: 100%; }
     border-color: #6ae368;
 }
 
-#more-info h2 {
-    margin-bottom: 30px;
+#playlists-info h2 {
+    margin-bottom: 70px;
 }
 
 .playlists-wrapper {
@@ -195,6 +195,11 @@ img { max-width: 100%; }
     -webkit-box-orient: vertical;
 }
 
+#artists {
+    margin-top: 150px;
+    margin-bottom: 100px;
+}
+
 #artists img{
     max-height: 250px;
     border-radius: 100%;
@@ -202,10 +207,40 @@ img { max-width: 100%; }
 
 #artists h2{
     text-align: initial;
-}    
+    margin-bottom: 50px;
+}
 
 .graphs-wrapper {
     background-color: #232323;
+}
+
+#graphs {
+    min-height: 700px;
+}
+
+#graphs-info h2 {
+    margin-bottom: 70px;
+}
+
+#bar-top-artists {
+    height: 600px;
+    width: 1200px;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+#bar-least-artists {
+    height: 600px;
+    width: 1200px;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+#bar-top-least-artists {
+    height: 600px;
+    width: 1200px;
+    margin: auto;
+    margin-bottom: 30px;
 }
 
 /***** About Styles *****/

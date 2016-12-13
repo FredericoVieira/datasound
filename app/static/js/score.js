@@ -56,8 +56,8 @@ var getArtistsPopularity = function () {
             success: function (response) {
                 for (var i = 0; i < response.artists.length; i++) {
                     artists_popularity.push({
-                        'id': response.artists[i].id, 
-                        'name':response.artists[i].name, 
+                        'id': response.artists[i].id,
+                        'name':response.artists[i].name,
                         'popularity':response.artists[i].popularity,
                         'image': !response.artists[i].images.length ? 'https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg' : response.artists[i].images[0].url
                     });
@@ -68,19 +68,17 @@ var getArtistsPopularity = function () {
 }
 
 var getUserScore = function (score) {
-    var format = d3.format(",d");
+    var options = {
+      useEasing : false,
+      useGrouping : false,
+      separator : '',
+      decimal : '.',
+      prefix : '',
+      suffix : ''
+    };
 
-    d3.select("#counter")
-      .transition()
-        .duration(2500)
-        .on("start", function repeat() {
-          d3.active(this)
-              .tween("text", function() {
-                var that = d3.select(this),
-                    i = d3.interpolateNumber(that.text().replace(/,/g, ""), score);
-                return function(t) { that.text(format(i(t))); };
-              })
-        });
+    var countUp = new CountUp($('#counter')[0], 0, score, 0, 2.5, options);
+    countUp.start();
 }
 
 var mountScoreAndClassification = function () {
@@ -108,7 +106,7 @@ var mountScoreAndClassification = function () {
     setTimeout(function() {
             $('.classification').text(classification);
             $('#more-info-anchor').show();
-    }, 2500);
+    }, 2700);
 }
 
 var mountPlaylists = function () {
@@ -132,7 +130,6 @@ var mountPlaylists = function () {
 }
 
 var mountMostAndLeastPopularityArtists = function () {
-    artists_popularity.sort(compare);
     var last = artists_popularity.length - 1;
 
     var most_popular_artist = $($.parseHTML('<div></div>'));
@@ -158,6 +155,41 @@ var mountMostAndLeastPopularityArtists = function () {
 }
 
 var mountGraphsAnalyses = function () {
+
+    var last = artists_popularity.length;
+
+    var top_artists = artists_popularity.slice(last - 15, last);
+    var least_artists = artists_popularity.slice(0, 15);
+
+    var top_least_artists = [];
+    var top_least_artists = top_least_artists.concat(top_artists, least_artists);
+
+    var visualization = d3plus.viz()
+        .container("#bar-top-artists")
+        .data(top_artists)
+        .type("bar")
+        .id("name")
+        .x("name")
+        .y("popularity")
+        .draw()
+
+    var visualization = d3plus.viz()
+        .container("#bar-least-artists")
+        .data(least_artists)
+        .type("bar")
+        .id("name")
+        .x("name")
+        .y("popularity")
+        .draw()
+
+    var visualization = d3plus.viz()
+        .container("#bar-top-least-artists")
+        .data(top_least_artists)
+        .type("bar")
+        .id("name")
+        .x("name")
+        .y("popularity")
+        .draw()
 }
 
 var compare = function (a, b) {
@@ -185,9 +217,9 @@ $(document).ready(function() {
 
         mountScoreAndClassification();
         mountPlaylists();
+        artists_popularity.sort(compare);
         mountMostAndLeastPopularityArtists();
         mountGraphsAnalyses();
-        
 
         //for (var i = 0; i < artists_popularity.length; i++) {
         //    $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
