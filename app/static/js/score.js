@@ -29,8 +29,10 @@ var getPlaylists = function (user_id, oauth_token) {
                     },
                     success: function (response) {
                         for (var k = 0; k < response.items.length; k++) {
-                            id = response.items[k].track.album.artists[0].id;
-                            if (artists_ids.indexOf(id) === -1 && id != '0LyfQWJT6nXafLPZqxe9Of') { //Various Artists id case
+                            var id = response.items[k].track.album.artists[0].id;
+                            if (artists_ids.indexOf(id) === -1 &&
+                                id != '0LyfQWJT6nXafLPZqxe9Of' &&
+                                response.items[k].track.album.artists[0].name.indexOf("Various Artists")) {
                                 artists_ids.push(id);
                             }
                         };
@@ -132,26 +134,23 @@ var mountPlaylists = function () {
 var mountMostAndLeastPopularityArtists = function () {
     var last = artists_popularity.length - 1;
 
-    var most_popular_artist = $($.parseHTML('<div></div>'));
-    var img_mp = $($.parseHTML('<img>'));
-    img_mp.attr('src', artists_popularity[last].image)
+    for (var i = 0; i < 3; i++) {
+        var img_artist = $($.parseHTML('<img>'));
+        img_artist.attr('src', artists_popularity[last - i].image)
             .addClass('artist-img img-responsive');
 
-    most_popular_artist.append(img_mp);
-    $('#most-popular-artist').append(most_popular_artist);
+        var name_popularity = $($.parseHTML('<h3>' + artists_popularity[last - i].name + ': ' + artists_popularity[last - i].popularity + '</h3>'));
+        $('#top-3-artists').append(img_artist, name_popularity);
+    }
 
-    var p = $($.parseHTML('<h2></h2>'));
-    $('#most-popular-artist').append(p.clone().html(artists_popularity[last].name + ': ' + artists_popularity[last].popularity));
-
-    var least_popular_artist = $($.parseHTML('<div></div>'));
-    var img_lp = $($.parseHTML('<img>'));
-    img_lp.attr('src', artists_popularity[0].image)
+    for (var i = 0; i < 3; i++) {
+        var img_artist = $($.parseHTML('<img>'));
+        img_artist.attr('src', artists_popularity[i].image)
             .addClass('artist-img img-responsive');
 
-    least_popular_artist.append(img_lp);
-    $('#least-popular-artist').append(least_popular_artist);
-
-    $('#least-popular-artist').append(p.clone().html(artists_popularity[0].name + ': ' + artists_popularity[0].popularity));
+        var name_popularity = $($.parseHTML('<h3>' + artists_popularity[i].name + ': ' + artists_popularity[i].popularity + '</h3>'));
+        $('#least-3-artists').append(img_artist, name_popularity);
+    }
 }
 
 var mountGraphsAnalyses = function () {
@@ -159,6 +158,14 @@ var mountGraphsAnalyses = function () {
     var last = artists_popularity.length;
 
     var top_artists = artists_popularity.slice(last - 15, last);
+
+    // for (var i = 0; i < top_artists.length; i++) {
+    //     var img_artist = $($.parseHTML('<img>'));
+    //     img_artist.attr('src',  top_artists[i].image)
+    //             .addClass('artist-img img-responsive');
+    //     $('#top-15-artists').append(img_artist);
+    // }
+
     var least_artists = artists_popularity.slice(0, 15);
 
     var top_least_artists = [];
@@ -169,10 +176,8 @@ var mountGraphsAnalyses = function () {
         .data(top_artists)
         .type("bar")
         .id("name")
-        .x("name")
-        .x({"label": false})
-        .y("popularity")
-        .y({"label": false})
+        .x({"value": "name", "label": false})
+        .y({"value": "popularity", "label": false, "range": [0, 100]})
         .labels({"padding": 30})
         .order({"sort": "asc", "value":"popularity"})
         .color({"scale": ["#1DB954"]})
@@ -183,13 +188,11 @@ var mountGraphsAnalyses = function () {
         .data(least_artists)
         .type("bar")
         .id("name")
-        .x("name")
-        .x({"label": false})
-        .y("popularity")
-        .y({"label": false})
+        .x({"value": "name", "label": false})
+        .y({"value": "popularity", "label": false, "range": [0, 100]})
         .labels({"padding": 30})
         .order({"sort": "asc", "value":"popularity"})
-        .labels({"padding": 15})
+        .labels({"padding": 30})
         .color({"scale": ["#828282"]})
         .draw()
 }

@@ -196,18 +196,23 @@ img { max-width: 100%; }
 }
 
 #artists {
-    margin-top: 150px;
-    margin-bottom: 100px;
+    margin-bottom: 15px;
 }
 
 #artists img{
     max-height: 250px;
     border-radius: 100%;
+    margin: auto;
 }
 
 #artists h2{
-    text-align: initial;
+    text-align: center;
     margin-bottom: 50px;
+}
+
+#artists h3{
+    text-align: center;
+    margin-bottom: 75px;
 }
 
 .graphs-wrapper {
