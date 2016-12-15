@@ -29,7 +29,8 @@ var getPlaylists = function (user_id, oauth_token) {
                     },
                     success: function (response) {
                         for (var k = 0; k < response.items.length; k++) {
-                            var id = response.items[k].track.album.artists[0].id;
+                            if(response.items[k].track.album.artists.length != 0) var id = response.items[k].track.album.artists[0].id
+                            else break;
                             if (artists_ids.indexOf(id) === -1 &&
                                 id != '0LyfQWJT6nXafLPZqxe9Of' &&
                                 response.items[k].track.album.artists[0].name.indexOf("Various Artists")) {
@@ -97,10 +98,18 @@ var mountScoreAndClassification = function () {
     if (score <= 20) {
         classification = "Antiquado!";
     } else if (score > 20 && score <= 35 ) {
+        classification = "Underground!";
+    } else if (score > 35 && score <= 50 ) {
         classification = "Alternativo!";
-    } else if (score > 35 && score <=50 ) {
+    } else if (score > 50 && score <= 55 ) {
         classification = "Descolado!";
-    } else if (score > 50 && score <= 75 ) {
+    } else if (score > 55 && score <= 60 ) {
+        classification = "Você faz seu som!";
+    } else if (score > 60 && score <= 65 ) {
+        classification = "Original!";
+    } else if (score > 65 && score <= 70 ) {
+        classification = "Na onda dos amigos!";
+    } else if (score > 70 && score <= 80 ) {
         classification = "Mais um na multidão!";
     } else {
         classification = "Modinha Total!"
@@ -182,7 +191,7 @@ var mountGraphsAnalyses = function () {
         .type("bar")
         .id("name")
         .x({"value": "name", "label": false, "grid": false})
-        .y({"value": "popularity", "label": false, "range": [0, 100], "grid": {  "color": "#333" }})
+        .y({"value": "popularity", "label": false, "range": [0, 100], "grid": {"color": "#333"}})
         .labels({"padding": 30})
         .order({"sort": "asc", "value":"popularity"})
         .color({"scale": ["#828282"]})
@@ -240,7 +249,7 @@ var mountGraphsAnalyses = function () {
     .color("value")
     .background("#232323")
     .title("Gêneros Musicais")
-    .title({"font":{ "size": "50px"}})
+    .title({"font": {"size": "50px"}})
     .draw()
 }
 
@@ -265,15 +274,11 @@ $(document).ready(function() {
     getPlaylists(user_id, oauth_token);
 
     $(document).ajaxStop(function () {
-
         mountScoreAndClassification();
         mountPlaylists();
         artists_info.sort(compare);
         mountMostAndLeastPopularityArtists();
         mountGraphsAnalyses();
 
-        //for (var i = 0; i < artists_info.length; i++) {
-        //    $('#more-info').append(artists_info[i].name + ": " + artists_info[i].popularity + "<br>");
-        //}
     });
 });
