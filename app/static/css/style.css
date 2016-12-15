@@ -175,6 +175,7 @@ img { max-width: 100%; }
 }
 
 #playlists-info h2 {
+    margin-top: 50px;
     margin-bottom: 70px;
 }
 
@@ -195,36 +196,55 @@ img { max-width: 100%; }
     -webkit-box-orient: vertical;
 }
 
-#artists {
+#playlists img {
+    min-height: 276.656px;
+}
+
+#artists-info-anchor,
+#graphs-info-anchor {
+    float: left;
+    color: #de615e;
+    font-size: 30px;
+    margin-top: -25px;
+    margin-left: 270px;
+}
+
+#artists-info-anchor:hover,
+#graphs-info-anchor:hover {
+    color: #de615e;
+    border-color: #de615e;
+}
+
+#artists-info {
     margin-bottom: 15px;
 }
 
-#artists img{
+#artists-info img{
     max-height: 250px;
     border-radius: 100%;
     margin: auto;
 }
 
-#artists h2{
+#artists-info h2{
     text-align: center;
+    margin-top: 50px;
     margin-bottom: 50px;
 }
 
-#artists h3{
+#artists-info h3{
     text-align: center;
     margin-bottom: 75px;
+    color: white;
 }
 
 .graphs-wrapper {
     background-color: #232323;
 }
 
-#graphs {
-    min-height: 700px;
-}
-
 #graphs-info h2 {
+    margin-top: 50px;
     margin-bottom: 70px;
+    padding: 0px 330px;
 }
 
 #bar-top-artists {
