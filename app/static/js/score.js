@@ -1,6 +1,6 @@
 var playlists = [];
 var artists_ids = [];
-var artists_popularity = [];
+var artists_info = [];
 
 var getPlaylists = function (user_id, oauth_token) {
     $.ajax({
@@ -57,11 +57,12 @@ var getArtistsPopularity = function () {
             url: 'https://api.spotify.com/v1/artists?ids=' + artists_ids.slice(0 + (50 * i), 50 + (50 * i)).toString(), //Limit of 50 artists per request
             success: function (response) {
                 for (var i = 0; i < response.artists.length; i++) {
-                    artists_popularity.push({
+                    artists_info.push({
                         'id': response.artists[i].id,
                         'name':response.artists[i].name,
                         'popularity':response.artists[i].popularity,
-                        'image': !response.artists[i].images.length ? 'https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg' : response.artists[i].images[0].url
+                        'image': !response.artists[i].images.length ? 'https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg' : response.artists[i].images[0].url,
+                        'genres': response.artists[i].genres
                     });
                 };
             }
@@ -85,11 +86,11 @@ var getUserScore = function (score) {
 
 var mountScoreAndClassification = function () {
     var popularity_sum = 0;
-    for (var i = 0; i < artists_popularity.length; i++) {
-        popularity_sum = popularity_sum + artists_popularity[i].popularity;
+    for (var i = 0; i < artists_info.length; i++) {
+        popularity_sum = popularity_sum + artists_info[i].popularity;
     }
 
-    var score = popularity_sum / artists_popularity.length;
+    var score = popularity_sum / artists_info.length;
     getUserScore(score);
 
     var classification;
@@ -100,7 +101,7 @@ var mountScoreAndClassification = function () {
     } else if (score > 35 && score <=50 ) {
         classification = "Descolado!";
     } else if (score > 50 && score <= 75 ) {
-        classification = "Mais um no meio do multidão!";
+        classification = "Mais um na multidão!";
     } else {
         classification = "Modinha Total!"
     }
@@ -132,44 +133,32 @@ var mountPlaylists = function () {
 }
 
 var mountMostAndLeastPopularityArtists = function () {
-    var last = artists_popularity.length - 1;
+    var last = artists_info.length - 1;
 
     for (var i = 0; i < 3; i++) {
         var img_artist = $($.parseHTML('<img>'));
-        img_artist.attr('src', artists_popularity[last - i].image)
+        img_artist.attr('src', artists_info[last - i].image)
             .addClass('artist-img img-responsive');
 
-        var name_popularity = $($.parseHTML('<h3>' + artists_popularity[last - i].name + ': ' + artists_popularity[last - i].popularity + '</h3>'));
+        var name_popularity = $($.parseHTML('<h3>' + artists_info[last - i].name + ': ' + artists_info[last - i].popularity + '</h3>'));
         $('#top-3-artists').append(img_artist, name_popularity);
     }
 
     for (var i = 0; i < 3; i++) {
         var img_artist = $($.parseHTML('<img>'));
-        img_artist.attr('src', artists_popularity[i].image)
+        img_artist.attr('src', artists_info[i].image)
             .addClass('artist-img img-responsive');
 
-        var name_popularity = $($.parseHTML('<h3>' + artists_popularity[i].name + ': ' + artists_popularity[i].popularity + '</h3>'));
+        var name_popularity = $($.parseHTML('<h3>' + artists_info[i].name + ': ' + artists_info[i].popularity + '</h3>'));
         $('#least-3-artists').append(img_artist, name_popularity);
     }
 }
 
 var mountGraphsAnalyses = function () {
+    var last = artists_info.length;
 
-    var last = artists_popularity.length;
-
-    var top_artists = artists_popularity.slice(last - 15, last);
-
-    // for (var i = 0; i < top_artists.length; i++) {
-    //     var img_artist = $($.parseHTML('<img>'));
-    //     img_artist.attr('src',  top_artists[i].image)
-    //             .addClass('artist-img img-responsive');
-    //     $('#top-15-artists').append(img_artist);
-    // }
-
-    var least_artists = artists_popularity.slice(0, 15);
-
-    var top_least_artists = [];
-    var top_least_artists = top_least_artists.concat(top_artists, least_artists);
+    var top_artists = artists_info.slice(last - 15, last);
+    var least_artists = artists_info.slice(0, 15);
 
     var visualization = d3plus.viz()
         .container("#bar-top-artists")
@@ -196,13 +185,63 @@ var mountGraphsAnalyses = function () {
         .y({"value": "popularity", "label": false, "range": [0, 100], "grid": {  "color": "#333" }})
         .labels({"padding": 30})
         .order({"sort": "asc", "value":"popularity"})
-        .labels({"padding": 30})
         .color({"scale": ["#828282"]})
         .background("#232323")
         .axes({"background": {"color": "#232323"}})
         .title("Top 15 Artistas Menos Populares")
         .title({"font":{ "size": "50px"}})
         .draw()
+
+    var genres = [];
+    for (var i = 0; i < artists_info.length; i++) {
+        if (artists_info[i].genres.length){
+            for (var j = 0; j < artists_info[i].genres.length; j++) {
+                var result = $.grep(genres, function(e){ return e.name == artists_info[i].genres[j];});
+                if (result.length == 0) {
+                    var name = artists_info[i].genres[j];
+                    var main_genre;
+                    //Refactor, create a function to recieve a string and return main genre, genres can be in array
+                    if (name.toLowerCase().indexOf('hip hop') !== -1) main_genre = 'Hip Hop'
+                    else if (name.toLowerCase().indexOf('pop rap') !== -1) main_genre = 'Pop Rap'
+                    else if (name.toLowerCase().indexOf('dance') !== -1) main_genre = 'Dance'
+                    else if (name.toLowerCase().indexOf('pagode') !== -1) main_genre = 'Pagode'
+                    else if (name.toLowerCase().indexOf('samba') !== -1) main_genre = 'Samba'
+                    else if (name.toLowerCase().indexOf('pop rock') !== -1) main_genre = 'Pop Rock'
+                    else if (name.toLowerCase().indexOf('pop') !== -1) main_genre = 'Pop'
+                    else if (name.toLowerCase().indexOf('trap') !== -1) main_genre = 'Trap'
+                    else if (name.toLowerCase().indexOf('rap') !== -1) main_genre = 'Rap'
+                    else if (name.toLowerCase().indexOf('punk') !== -1) main_genre = 'Punk'
+                    else if (name.toLowerCase().indexOf('rock') !== -1) main_genre = 'Rock'
+                    else if (name.toLowerCase().indexOf('mpb') !== -1) main_genre = 'MPB'
+                    else if (name.toLowerCase().indexOf('r&b') !== -1) main_genre = 'R&B'
+                    else if (name.toLowerCase().indexOf('funk') !== -1) main_genre = 'Funk'
+                    else if (name.toLowerCase().indexOf('axe') !== -1) main_genre = 'Axe'
+                    else if (name.toLowerCase().indexOf('bossa nova') !== -1) main_genre = 'Bossa Nova'
+                    else if (name.toLowerCase().indexOf('forro') !== -1) main_genre = 'Forro'
+                    else if (name.toLowerCase().indexOf('sertanejo') !== -1) main_genre = 'Sertanejo'
+                    else if (name.toLowerCase().indexOf('grunje') !== -1) main_genre = 'Grunje'
+                    else if (name.toLowerCase().indexOf('emo') !== -1) main_genre = 'Emo'
+                    else if (name.toLowerCase().indexOf('house') !== -1) main_genre = 'House'
+                    else main_genre = 'Outro'
+                    genres.push({"name": name, "value": 1, "main_genre": main_genre});
+                } else {
+                    result[0].value++;
+                }
+            }
+        }
+    }
+
+    var visualization = d3plus.viz()
+    .container("#treemap-genres")
+    .data(genres)
+    .type("tree_map")
+    .id(["main_genre","name"])
+    .size("value")
+    .color("value")
+    .background("#232323")
+    .title("Gêneros Musicais")
+    .title({"font":{ "size": "50px"}})
+    .draw()
 }
 
 var compare = function (a, b) {
@@ -214,7 +253,6 @@ var compare = function (a, b) {
 }
 
 $(document).ready(function() {
-
     $.localScroll({
         offset: 0,
         duration: 1200
@@ -230,12 +268,12 @@ $(document).ready(function() {
 
         mountScoreAndClassification();
         mountPlaylists();
-        artists_popularity.sort(compare);
+        artists_info.sort(compare);
         mountMostAndLeastPopularityArtists();
         mountGraphsAnalyses();
 
-        //for (var i = 0; i < artists_popularity.length; i++) {
-        //    $('#more-info').append(artists_popularity[i].name + ": " + artists_popularity[i].popularity + "<br>");
+        //for (var i = 0; i < artists_info.length; i++) {
+        //    $('#more-info').append(artists_info[i].name + ": " + artists_info[i].popularity + "<br>");
         //}
     });
 });

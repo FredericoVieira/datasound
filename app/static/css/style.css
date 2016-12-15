@@ -247,14 +247,7 @@ img { max-width: 100%; }
     padding: 0px 330px;
 }
 
-#bar-top-artists {
-    height: 600px;
-    width: 1200px;
-    margin: auto;
-    margin-bottom: 30px;
-}
-
-#bar-least-artists {
+#graphs > div {
     height: 600px;
     width: 1200px;
     margin: auto;
