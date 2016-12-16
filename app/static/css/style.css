@@ -183,6 +183,10 @@ img { max-width: 100%; }
     background-color: #232323;
 }
 
+@media (max-width: 767px) {
+    .playlist img { max-height: 300px; }
+}
+
 #playlists .playlist {
     min-height: 360px;
 }
@@ -196,22 +200,16 @@ img { max-width: 100%; }
     -webkit-box-orient: vertical;
 }
 
-#playlists img {
-    min-height: 276.656px;
-}
-
-#artists-info-anchor,
-#graphs-info-anchor {
+#artists-info-anchor {
     float: left;
     color: #de615e;
     border-color: #444444;
     font-size: 30px;
     margin-top: -25px;
-    margin-left: 270px;
+    margin-left: 50px;
 }
 
-#artists-info-anchor:hover,
-#graphs-info-anchor:hover {
+#artists-info-anchor:hover {
     color: #de615e;
     border-color: #de615e;
 }
@@ -238,6 +236,31 @@ img { max-width: 100%; }
     color: white;
 }
 
+.graph-ancor {
+    float: left;
+}
+
+#graphs-info-anchor {
+    color: #de615e;
+    border-color: #444444;
+    font-size: 30px;
+    margin-top: -25px;
+    margin-left: -305px;
+}
+
+#graphs-info-anchor {
+    color: #de615e;
+    border-color: #444444;
+    font-size: 30px;
+    margin-top: -25px;
+    margin-left: -305px;
+}
+
+#graphs-info-anchor:hover {
+    color: #de615e;
+    border-color: #de615e;
+}
+
 .graphs-wrapper {
     background-color: #232323;
 }
@@ -245,14 +268,29 @@ img { max-width: 100%; }
 #graphs-info h2 {
     margin-top: 50px;
     margin-bottom: 70px;
-    padding: 0px 330px;
 }
 
 #graphs > div {
-    height: 600px;
-    width: 1200px;
+    height: 500px;
+    width: 1000px;
     margin: auto;
     margin-bottom: 30px;
+}
+
+/***** Responsive Graphs *****/
+
+@media (max-width: 767px) {
+    #graphs > div {
+        height: 400px;
+        width: 500px;
+    }
+}
+
+@media (max-width: 500px) {
+    #graphs > div {
+        height: 300px;
+        width: 400px;
+    }
 }
 
 /***** About Styles *****/

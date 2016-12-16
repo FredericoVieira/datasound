@@ -29,12 +29,14 @@ var getPlaylists = function (user_id, oauth_token) {
                     },
                     success: function (response) {
                         for (var k = 0; k < response.items.length; k++) {
-                            if(response.items[k].track.album.artists.length != 0) var id = response.items[k].track.album.artists[0].id
-                            else break;
-                            if (artists_ids.indexOf(id) === -1 &&
-                                id != '0LyfQWJT6nXafLPZqxe9Of' &&
-                                response.items[k].track.album.artists[0].name.indexOf("Various Artists")) {
-                                artists_ids.push(id);
+                            if(response.items[k].track !== null){
+                                if(response.items[k].track.album.artists.length != 0 ) var id = response.items[k].track.album.artists[0].id
+                                else break;
+                                if (artists_ids.indexOf(id) === -1 &&
+                                    id != '0LyfQWJT6nXafLPZqxe9Of' &&
+                                    response.items[k].track.album.artists[0].name.indexOf("Various Artists")) {
+                                    artists_ids.push(id);
+                                }
                             }
                         };
 
@@ -182,7 +184,7 @@ var mountGraphsAnalyses = function () {
         .background("#232323")
         .axes({"background": {"color": "#232323"}})
         .title("Top 15 Artistas Mais Populares")
-        .title({"font":{ "size": "50px"}})
+        .title({"font":{ "size": "25px"}})
         .draw()
 
     var visualization = d3plus.viz()
@@ -198,7 +200,7 @@ var mountGraphsAnalyses = function () {
         .background("#232323")
         .axes({"background": {"color": "#232323"}})
         .title("Top 15 Artistas Menos Populares")
-        .title({"font":{ "size": "50px"}})
+        .title({"font":{ "size": "25px"}})
         .draw()
 
     var genres = [];
@@ -249,7 +251,7 @@ var mountGraphsAnalyses = function () {
     .color("value")
     .background("#232323")
     .title("Gêneros Musicais")
-    .title({"font": {"size": "50px"}})
+    .title({"font": {"size": "25px"}})
     .draw()
 }
 
