@@ -1,6 +1,7 @@
 var playlists = [];
 var artists_ids = [];
 var artists_info = [];
+var image_default = "https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg"
 
 var getPlaylists = function (user_id, oauth_token) {
     $.ajax({
@@ -14,7 +15,7 @@ var getPlaylists = function (user_id, oauth_token) {
                     'id':response.items[i].uri.split(':')[4],
                     'name':response.items[i].name,
                     'owner_id':response.items[i].uri.split(':')[2],
-                    'image': !response.items[i].images.length ? 'https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg' : response.items[i].images[0].url
+                    'image': !response.items[i].images.length ? image_default : response.items[i].images[0].url
                 });
             };
 
@@ -41,7 +42,7 @@ var getPlaylists = function (user_id, oauth_token) {
                         };
 
                         playlists_aux.shift();
-                        if (playlists_aux.length == 0) getArtistsPopularity();
+                        if (playlists_aux.length == 0) getArtistsInfo();
                     }
                 });
             };
@@ -49,7 +50,7 @@ var getPlaylists = function (user_id, oauth_token) {
     });
 };
 
-var getArtistsPopularity = function () {
+var getArtistsInfo = function () {
     var div = Math.floor(artists_ids.length / 50);
     var rem = artists_ids.length % 50;
 
@@ -64,7 +65,7 @@ var getArtistsPopularity = function () {
                         'id': response.artists[i].id,
                         'name':response.artists[i].name,
                         'popularity':response.artists[i].popularity,
-                        'image': !response.artists[i].images.length ? 'https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg' : response.artists[i].images[0].url,
+                        'image': !response.artists[i].images.length ? image_default : response.artists[i].images[0].url,
                         'genres': response.artists[i].genres
                     });
                 };
@@ -169,8 +170,6 @@ var mountGraphsAnalyses = function () {
     var last = artists_info.length;
 
     var top_artists = artists_info.slice(last - 15, last);
-    var least_artists = artists_info.slice(0, 15);
-
     var visualization = d3plus.viz()
         .container("#bar-top-artists")
         .data(top_artists)
@@ -187,6 +186,7 @@ var mountGraphsAnalyses = function () {
         .title({"font":{ "size": "25px"}})
         .draw()
 
+    var least_artists = artists_info.slice(0, 15);
     var visualization = d3plus.viz()
         .container("#bar-least-artists")
         .data(least_artists)
@@ -203,56 +203,63 @@ var mountGraphsAnalyses = function () {
         .title({"font":{ "size": "25px"}})
         .draw()
 
+    var genres_to_main_genre = {
+        "hip hop": "Hip Hop",
+        "pop rap": "Pop Rap",
+        "dance": "Dance",
+        "pagode": "Pagode",
+        "samba": "Samba",
+        "pop rock": "Pop Rock",
+        "pop": "Pop",
+        "trap": "Trap",
+        "rap": "Rap",
+        "punk": "Punk",
+        "rock": "Rock",
+        "mpb": "MPB",
+        "r&b": "R&B",
+        "funk": "Funk",
+        "axe": "Axe",
+        "bossa nova": "Bossa Nova",
+        "forro": "Forro",
+        "sertanejo": "Sertanejo",
+        "grunje": "Grunje",
+        "emo": "Emo",
+        "house": "House"
+    };
+
+    var classifyMainGenre = function (genre_name, dict) {
+        for (var i = 0; i < Object.keys(dict).length; i++) {
+            if(genre_name.indexOf(Object.keys(dict)[i]) !== -1) return dict[Object.keys(dict)[i]]
+        }
+        return 'Outro'
+    }
+
     var genres = [];
     for (var i = 0; i < artists_info.length; i++) {
         if (artists_info[i].genres.length){
             for (var j = 0; j < artists_info[i].genres.length; j++) {
                 var result = $.grep(genres, function(e){ return e.name == artists_info[i].genres[j];});
                 if (result.length == 0) {
-                    var name = artists_info[i].genres[j];
-                    var main_genre;
-                    //Refactor, create a function to recieve a string and return main genre, genres can be in array
-                    if (name.toLowerCase().indexOf('hip hop') !== -1) main_genre = 'Hip Hop'
-                    else if (name.toLowerCase().indexOf('pop rap') !== -1) main_genre = 'Pop Rap'
-                    else if (name.toLowerCase().indexOf('dance') !== -1) main_genre = 'Dance'
-                    else if (name.toLowerCase().indexOf('pagode') !== -1) main_genre = 'Pagode'
-                    else if (name.toLowerCase().indexOf('samba') !== -1) main_genre = 'Samba'
-                    else if (name.toLowerCase().indexOf('pop rock') !== -1) main_genre = 'Pop Rock'
-                    else if (name.toLowerCase().indexOf('pop') !== -1) main_genre = 'Pop'
-                    else if (name.toLowerCase().indexOf('trap') !== -1) main_genre = 'Trap'
-                    else if (name.toLowerCase().indexOf('rap') !== -1) main_genre = 'Rap'
-                    else if (name.toLowerCase().indexOf('punk') !== -1) main_genre = 'Punk'
-                    else if (name.toLowerCase().indexOf('rock') !== -1) main_genre = 'Rock'
-                    else if (name.toLowerCase().indexOf('mpb') !== -1) main_genre = 'MPB'
-                    else if (name.toLowerCase().indexOf('r&b') !== -1) main_genre = 'R&B'
-                    else if (name.toLowerCase().indexOf('funk') !== -1) main_genre = 'Funk'
-                    else if (name.toLowerCase().indexOf('axe') !== -1) main_genre = 'Axe'
-                    else if (name.toLowerCase().indexOf('bossa nova') !== -1) main_genre = 'Bossa Nova'
-                    else if (name.toLowerCase().indexOf('forro') !== -1) main_genre = 'Forro'
-                    else if (name.toLowerCase().indexOf('sertanejo') !== -1) main_genre = 'Sertanejo'
-                    else if (name.toLowerCase().indexOf('grunje') !== -1) main_genre = 'Grunje'
-                    else if (name.toLowerCase().indexOf('emo') !== -1) main_genre = 'Emo'
-                    else if (name.toLowerCase().indexOf('house') !== -1) main_genre = 'House'
-                    else main_genre = 'Outro'
-                    genres.push({"name": name, "value": 1, "main_genre": main_genre});
-                } else {
-                    result[0].value++;
-                }
+                    genres.push({
+                        "name": artists_info[i].genres[j],
+                        "value": 1,
+                        "main_genre": classifyMainGenre(artists_info[i].genres[j], genres_to_main_genre)});
+                } else result[0].value++;
             }
         }
     }
 
     var visualization = d3plus.viz()
-    .container("#treemap-genres")
-    .data(genres)
-    .type("tree_map")
-    .id(["main_genre","name"])
-    .size("value")
-    .color("value")
-    .background("#232323")
-    .title("Gêneros Musicais")
-    .title({"font": {"size": "25px"}})
-    .draw()
+        .container("#treemap-genres")
+        .data(genres)
+        .type("tree_map")
+        .id(["main_genre","name"])
+        .size("value")
+        .color("value")
+        .background("#232323")
+        .title("Gêneros Musicais e suas Derivações")
+        .title({"font": {"size": "25px"}})
+        .draw()
 }
 
 var compare = function (a, b) {
@@ -281,6 +288,5 @@ $(document).ready(function() {
         artists_info.sort(compare);
         mountMostAndLeastPopularityArtists();
         mountGraphsAnalyses();
-
     });
 });
