@@ -270,26 +270,23 @@ img { max-width: 100%; }
     margin-bottom: 70px;
 }
 
-#graphs > div {
+#graphs .graphs-bs > div {
     height: 500px;
-    width: 1000px;
-    margin: auto;
-    margin-bottom: 30px;
 }
+
+
 
 /***** Responsive Graphs *****/
 
 @media (max-width: 767px) {
-    #graphs > div {
+    #graphs .graphs-bs > div {
         height: 400px;
-        width: 500px;
     }
 }
 
 @media (max-width: 500px) {
-    #graphs > div {
+    #graphs .graphs-bs > div {
         height: 300px;
-        width: 400px;
     }
 }
 
